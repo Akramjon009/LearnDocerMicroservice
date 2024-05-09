@@ -1,0 +1,120 @@
+version: '3.4'
+
+services:
+  blog.api:
+    image: ${DOCKER_REGISTRY-}blogapi
+    build:
+      context: .
+      dockerfile: src/Blogs/Blog.API/Dockerfile
+    depends_on:
+      - db
+    networks:
+      - db-network
+
+  webapplication1:
+    image: ${DOCKER_REGISTRY-}webapplication1
+    build:
+      context: .
+      dockerfile: src/Companys/WebApplication1/Dockerfile
+    depends_on:
+      - db2
+    networks:
+      - db-network
+
+
+  apigateway:
+    image: ${DOCKER_REGISTRY-}apigateway
+    build:
+      context: .
+      dockerfile: src/gate/APIgateway/Dockerfile
+
+
+  product.api:
+    image: ${DOCKER_REGISTRY-}productapi
+    build:
+      context: .
+      dockerfile: src/Products/Product.API/Dockerfile
+    depends_on:
+      - db3
+    networks:
+      - db-network
+
+
+  student.ui:
+    image: ${DOCKER_REGISTRY-}studentui
+    build:
+      context: .
+      dockerfile: src/Students/Student.UI/Dockerfile
+    depends_on:
+      - db1
+    networks:
+      - db-network
+
+
+
+  db:
+    container_name: db
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Akramjon_09
+      - POSTGRES_DB=BlDB
+    volumes:
+      - pgdata:/var/lib/postgresql/BlDB
+    ports:
+      - "5432:5432"
+    networks:
+      - db-network
+
+  db1:
+    container_name: db1
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Akramjon_09
+      - POSTGRES_DB=StDB
+    volumes:
+      - pgdata:/var/lib/postgresql/StDB
+    ports:
+      - "5433:5432"
+    networks:
+      - db-network
+
+  db2:
+    container_name: db2
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Akramjon_09
+      - POSTGRES_DB=CmDB
+    volumes:
+      - pgdata:/var/lib/postgresql/CmDB
+    ports:
+      - "5434:5432"
+    networks:
+      - db-network
+
+  db3:
+    container_name: db3
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Akramjon_09
+      - POSTGRES_DB=PrDb
+    volumes:
+      - pgdata:/var/lib/postgresql/PrDb
+    ports:
+      - "5435:5432"
+    networks:
+      - db-network
+
+
+
+
+networks:
+  db-network:
+    driver: bridge
+
+volumes:
+  pgdata:
+
